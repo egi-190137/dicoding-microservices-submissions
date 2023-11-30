@@ -1,3 +1,11 @@
 [submodule "1-deploy-item-app-with-docker-compose"]
 	path = 1-deploy-item-app-with-docker-compose
 	url = https://github.com/egi-190137/a433-microservices.git
+[submodule "2-deploy-karsajobs-app-with-kubernetes/karsajobs"]
+	path = 2-deploy-karsajobs-app-with-kubernetes/karsajobs
+	url = https://github.com/egi-190137/a433-microservices.git
+	branch = karsajobs
+[submodule "2-deploy-karsajobs-app-with-kubernetes/karsajobs-ui"]
+	path = 2-deploy-karsajobs-app-with-kubernetes/karsajobs-ui
+	url = https://github.com/egi-190137/a433-microservices.git
+	branch = karsajobs-ui

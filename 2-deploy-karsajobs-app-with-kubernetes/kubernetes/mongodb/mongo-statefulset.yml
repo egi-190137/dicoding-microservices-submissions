@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo
+  labels:
+    app: mongo
+spec:
+  selector:
+    matchLabels:
+      app: mongo
+      tier: database
+  serviceName: mongo
+  replicas: 1
+  minReadySeconds: 10
+  template:
+    metadata:
+      labels:
+        app: mongo
+        tier: database
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: mongo
+        image: mongo
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME_FILE
+          value: /etc/mongo-credentials/MONGO_ROOT_USERNAME
+        - name: MONGO_INITDB_ROOT_PASSWORD_FILE
+          value: /etc/mongo-credentials/MONGO_ROOT_PASSWORD
+        ports:
+        - containerPort: 27017
+          name: mongo
+        volumeMounts:
+        - name: mongodb-persistent-volume
+          mountPath: /data/db
+        - name: mongo-config
+          mountPath: /config
+        - name: mongo-secret
+          mountPath: /etc/mongo-credentials
+      volumes:
+      - name: mongodb-persistent-volume
+        persistentVolumeClaim:
+          claimName: mongo-pv-claim
+      - name: mongo-config
+        configMap:
+          name: mongo-config
+          items:
+          - key: mongo.conf
+            path: mongo.conf
+      - name: mongo-secret
+        secret:
+          secretName: mongo-secret
+          items:
+          - key: MONGO_ROOT_USERNAME
+            path: MONGO_ROOT_USERNAME
+            mode: 0444
+          - key: MONGO_ROOT_PASSWORD
+            path: MONGO_ROOT_PASSWORD
+            mode: 0444

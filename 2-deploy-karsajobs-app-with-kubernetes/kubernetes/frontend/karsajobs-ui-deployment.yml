@@ -1,0 +1,30 @@
+# versi api yang digunakan
+apiVersion: apps/v1
+# jenis resource yang akan dibuat
+kind: Deployment
+# data
+metadata:
+  name: karsajobs-ui
+  labels:
+    app: karsajobs-ui
+    tier: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: karsajobs-ui
+  template:
+    metadata:
+      labels:
+        app: karsajobs-ui
+        tier: front-end
+    spec:
+      containers:
+      - name: karsajobs-ui
+        image: ghcr.io/egi-190137/karsajobs-ui:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+          - containerPort: 8000
+        env:
+          - name: VUE_APP_BACKEND
+            value: "http://192.168.49.2:30010"
