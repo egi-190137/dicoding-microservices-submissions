@@ -9,3 +9,11 @@
 	path = 2-deploy-karsajobs-app-with-kubernetes/karsajobs-ui
 	url = https://github.com/egi-190137/a433-microservices.git
 	branch = karsajobs-ui
+[submodule "3-asynchronous-communication/order-service"]
+	path = 3-asynchronous-communication/order-service
+	url = https://github.com/egi-190137/a433-microservices.git
+	branch = order-service
+[submodule "3-asynchronous-communication/shipping-service"]
+	path = 3-asynchronous-communication/shipping-service
+	url = https://github.com/egi-190137/a433-microservices.git
+	branch = shipping-service

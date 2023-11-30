@@ -1,0 +1,64 @@
+# Versi syntax
+version: "3.2"
+# Menentukan service yang berjalan
+services:
+  rabbitmq:
+    # base image
+    image: rabbitmq:3.8-management
+    # nama container
+    container_name: 'rabbitmq_container'
+    # mengatur port
+    ports:
+      - 5672:5672
+      - 15672:15672
+    # mengatur volume container
+    volumes:
+      - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+      - ~/.docker-conf/rabbitmq/log/:/var/log/rabbitmq
+    # menentukan network yang digunakan
+    networks:
+      - rabbitmq_network
+  shipping:
+    # base image dari github packages
+    image: ghcr.io/egi-190137/shipping-service:latest
+    # mengatur restart policy
+    restart: unless-stopped
+    # depends_on agar order baru dijalankan ketika rabbit-mq sudah berjalan
+    depends_on:
+      - "rabbitmq"
+    # memberikan batas waktu tunggu rabbit-mq selama 30 detik
+    command: sh -c '/bin/wait-for-it.sh rabbitmq:5672 --timeout=30 -- node index.js'
+    # mengatur environment variable
+    environment:
+      PORT: 3001
+      AMQP_URL: amqp://guest:guest@rabbitmq:5672
+    # mengautur port yang di-publish
+    ports:
+      - 3001:3001
+    # menentukan network yang digunakan
+    networks:
+      - rabbitmq_network
+  order:
+    # base image dari github packages
+    image: ghcr.io/egi-190137/order-service:latest
+    # mengatur restart policy
+    restart: unless-stopped
+    # depends_on agar order baru dijalankan ketika rabbit-mq sudah berjalan
+    depends_on:
+      - "rabbitmq"
+    # memberikan batas waktu tunggu rabbit-mq selama 30 detik
+    command: sh -c '/bin/wait-for-it.sh rabbitmq:5672 --timeout=30 -- node index.js'
+    # mengatur environment variable
+    environment:
+      PORT: 3000
+      AMQP_URL: amqp://guest:guest@rabbitmq:5672
+    # mengautur port yang di-publish
+    ports:
+      - 3000:3000
+    # menentukan network yang digunakan
+    networks:
+      - rabbitmq_network
+# membuat network berjenis bridge
+networks:
+  rabbitmq_network:
+    driver: bridge

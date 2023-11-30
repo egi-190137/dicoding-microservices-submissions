@@ -1,0 +1,2 @@
+shipping-service : https://github.com/users/egi-190137/packages/container/package/shipping-service
+order-service : https://github.com/users/egi-190137/packages/container/package/order-service
