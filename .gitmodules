@@ -1,0 +1,3 @@
+[submodule "1-deploy-item-app-with-docker-compose"]
+	path = 1-deploy-item-app-with-docker-compose
+	url = https://github.com/egi-190137/a433-microservices.git
